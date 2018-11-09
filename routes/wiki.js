@@ -2,6 +2,12 @@ const express = require('express');
 const router = express.Router();
 const models = require('../models');
 
+function generateSlug (title) {
+  // Removes all non-alphanumeric characters from title
+  // And make whitespace underscore
+  return title.replace(/\s+/g, '_').replace(/\W/g, '');
+}
+
 const {
   Page
 } = require('../models');
@@ -19,30 +25,35 @@ router.get('/', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-  const data = res.json(req.body);
-
-  let slug = data.body.title.replace([/^ a - zA - Z\ d\ s/g], '');
-  slug = slug.replace(/ /g, '_');
-
-  console.log(slug);
-
-
+  const data = req.body;
   const page = new Page({
     title: data.title,
-    content: data.content
+    content: data.content,
+    slug: generateSlug(data.title)
   });
   try {
+    console.log('page is ' + page)
     await page.save();
-    res.redirect('/jhd');
+    res.redirect('/');
   } catch (error) {
     next(error);
   }
-  res.send('got to POST /wiki/');
 })
 
 router.get('/add', async (req, res, next) => {
   res.send(addPage());
   // res.send('got to GET /wiki/add');
 })
+
+router.get('/:slug', async (req, res, next) => {
+  try {
+    const page = await Page.findOne({
+      where: {
+        slug: req.params.slug
+      }
+    })
+    res.json(page);
+  } catch (err) { console.error(err)}
+});
 
 module.exports = router;
