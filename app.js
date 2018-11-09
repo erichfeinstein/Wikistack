@@ -1,6 +1,8 @@
 const morgan = require('morgan');
 const express = require('express')
 const app = express();
+const userRouter = require('./routes/user')
+const wikiRouter = require('./routes/wiki')
 
 const PORT = 1212;
 
@@ -13,12 +15,14 @@ const db = models.db;
 db.authenticate().
 then(() => {
   console.log('connected to the database');
+
 })
 
 async function syncTables() {
   try {
     await models.Page.sync();
     await models.User.sync();
+    models.db.sync({force: true});
     app.listen(PORT, () => {
       console.log(`App is listening in port ${PORT}`)
     })
@@ -26,6 +30,7 @@ async function syncTables() {
     console.error(error);
   }
 }
+
 syncTables();
 
 app.use(express.urlencoded({
