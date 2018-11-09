@@ -1,0 +1,22 @@
+{
+  "name": "wikistack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erichfeinstein/Wikistack.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/erichfeinstein/Wikistack/issues"
+  },
+  "homepage": "https://github.com/erichfeinstein/Wikistack#readme",
+  "dependencies": {
+    "sequelize": "^4.41.1"
+  }
+}
