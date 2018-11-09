@@ -21,9 +21,9 @@ async function syncTables() {
   try {
     await models.Page.sync();
     await models.User.sync();
-    models.db.sync({
-      force: true
-    });
+    // models.db.sync({
+    //   force: true
+    // });
     app.listen(PORT, () => {
       console.log(`App is listening in port ${PORT}`)
     })

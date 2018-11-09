@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const models = require('../models');
 
-function generateSlug (title) {
+const wikipage = require('../views/wikipage')
+
+function generateSlug(title) {
   // Removes all non-alphanumeric characters from title
   // And make whitespace underscore
   return title.replace(/\s+/g, '_').replace(/\W/g, '');
@@ -19,9 +21,9 @@ const {
 const main = require('../views/main');
 
 router.get('/', async (req, res, next) => {
-  // const data = models.Page.findAll();
-  // res.send(main(data));
-  res.send('got to GET /wiki/');
+  const data = await Page.findAll();
+  console.log(data);
+  res.send(main(data));
 });
 
 router.post('/', async (req, res, next) => {
@@ -34,7 +36,7 @@ router.post('/', async (req, res, next) => {
   try {
     console.log('page is ' + page)
     await page.save();
-    res.redirect('/');
+    res.redirect(`/wiki/${page.slug}`);
   } catch (error) {
     next(error);
   }
@@ -51,9 +53,11 @@ router.get('/:slug', async (req, res, next) => {
       where: {
         slug: req.params.slug
       }
-    })
-    res.json(page);
-  } catch (err) { console.error(err)}
+    });
+    res.send(wikipage(page));
+  } catch (err) {
+    console.error(err)
+  }
 });
 
 module.exports = router;
